@@ -56,17 +56,20 @@ function showMainUI() {
 function uploadGame() {
   const name = document.getElementById("game-name").value;
   const link = document.getElementById("game-link").value;
+  const exeName = document.getElementById("game-exe")?.value || "";
 
-  if (!name || !link) return alert("Fill in all fields");
+  if (!name || !link || !exeName) return alert("Fill in all fields");
 
   db.ref("games").push({
       name: name,
       link: link,
+      exe: exeName,
       author: currentUser.uid
   }).then(() => {
       loadGames();
       document.getElementById("game-name").value = "";
       document.getElementById("game-link").value = "";
+      document.getElementById("game-exe").value = "";
   });
 }
 
@@ -76,8 +79,31 @@ function loadGames() {
     .then(snapshot => {
         gameList.innerHTML = "";
         snapshot.forEach(child => {
+            const game = child.val();
+
             const li = document.createElement("li");
-            li.textContent = child.val().name + " → " + child.val().link;
+
+            // Editable fields
+            const nameInput = document.createElement("input");
+            nameInput.value = game.name;
+
+            const linkInput = document.createElement("input");
+            linkInput.value = game.link;
+
+            const exeInput = document.createElement("input");
+            exeInput.value = game.exe || "";
+            exeInput.placeholder = "EXE Name";
+
+            // Buttons
+            const saveBtn = document.createElement("button");
+            saveBtn.textContent = "Save";
+            saveBtn.onclick = () => {
+                db.ref("games/" + child.key).update({
+                    name: nameInput.value,
+                    link: linkInput.value,
+                    exe: exeInput.value
+                }).then(loadGames);
+            };
 
             const delBtn = document.createElement("button");
             delBtn.textContent = "Delete";
@@ -85,7 +111,12 @@ function loadGames() {
                 db.ref("games/" + child.key).remove().then(loadGames);
             };
 
+            li.appendChild(nameInput);
+            li.appendChild(linkInput);
+            li.appendChild(exeInput);
+            li.appendChild(saveBtn);
             li.appendChild(delBtn);
+
             gameList.appendChild(li);
         });
     });
