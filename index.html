@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Elixir Game Upload</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="auth-container">
+  <h1>Sign In or Register</h1>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+  <p id="auth-message"></p>
+</div>
+
+<div id="main-container" style="display:none;">
+  <h1>Welcome, <span id="user-email"></span></h1>
+
+  <h2>Upload Game</h2>
+  <input id="game-name" placeholder="Game Name">
+  <h1>MAKE SURE TO COPY THE GITHUB RAW LINK!</h1>
+  <input id="game-link" placeholder="GitHub Zip Link">
+  <button onclick="uploadGame()">Upload</button>
+
+  <h2>Your Games</h2>
+  <ul id="game-list"></ul>
+
+  <button onclick="logout()">Log Out</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

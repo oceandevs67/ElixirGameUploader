@@ -1,0 +1,118 @@
+:root {
+  --bg: #0f1115;
+  --surface: #1a1d24;
+  --surface-light: #232734;
+  --accent: #4f8cff;
+  --accent-hover: #3b76e0;
+  --danger: #e25555;
+  --danger-hover: #c94444;
+  --text: #e6e6eb;
+  --text-muted: #9aa0b3;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, #0f1115, #0b0d12);
+  color: var(--text);
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+}
+
+/* Inputs */
+input {
+  width: 260px;
+  padding: 12px 14px;
+  margin: 6px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background-color: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+input:focus {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 2px rgba(79, 140, 255, 0.2);
+}
+
+/* Buttons */
+button {
+  padding: 12px 22px;
+  margin: 6px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s;
+  box-shadow: 0 6px 18px rgba(79, 140, 255, 0.25);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(79, 140, 255, 0.35);
+}
+
+button:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+/* List */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* List items (cards) */
+li {
+  background: linear-gradient(180deg, var(--surface), var(--surface-light));
+  padding: 14px 16px;
+  margin: 10px 0;
+  border-radius: var(--radius);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Delete button inside list */
+li button {
+  background: linear-gradient(180deg, var(--danger), var(--danger-hover));
+  box-shadow: 0 6px 16px rgba(226, 85, 85, 0.3);
+  padding: 8px 14px;
+}
+
+li button:hover {
+  box-shadow: 0 10px 22px rgba(226, 85, 85, 0.45);
+}
