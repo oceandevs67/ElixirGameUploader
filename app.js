@@ -23,7 +23,7 @@ let currentUser = null;
 // ==========================
 function downloadLauncher() {
   window.open(
-    "PUT_LAUNCHER_LINK_HERE",
+    "https://drive.google.com/drive/folders/1smSItox6kqFD6Gj5jmnjLvyLI__eAy_a?usp=sharing",
     "_blank"
   );
 }
@@ -177,3 +177,4 @@ auth.onAuthStateChanged(user => {
     showMainUI();
   }
 });
+
