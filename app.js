@@ -18,33 +18,49 @@ const gameList = document.getElementById("game-list");
 
 let currentUser = null;
 
-// Register
+// ==========================
+// DOWNLOAD LAUNCHER BUTTON
+// ==========================
+function downloadLauncher() {
+  window.open(
+    "PUT_LAUNCHER_LINK_HERE",
+    "_blank"
+  );
+}
+
+// ==========================
+// REGISTER
+// ==========================
 function register() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   auth.createUserWithEmailAndPassword(email, password)
-      .then(userCred => {
-          currentUser = userCred.user;
-          showMainUI();
-      })
-      .catch(err => authMessage.textContent = err.message);
+    .then(userCred => {
+      currentUser = userCred.user;
+      showMainUI();
+    })
+    .catch(err => authMessage.textContent = err.message);
 }
 
-// Login
+// ==========================
+// LOGIN
+// ==========================
 function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
   auth.signInWithEmailAndPassword(email, password)
-      .then(userCred => {
-          currentUser = userCred.user;
-          showMainUI();
-      })
-      .catch(err => authMessage.textContent = err.message);
+    .then(userCred => {
+      currentUser = userCred.user;
+      showMainUI();
+    })
+    .catch(err => authMessage.textContent = err.message);
 }
 
-// Show main UI
+// ==========================
+// SHOW MAIN UI
+// ==========================
 function showMainUI() {
   authContainer.style.display = "none";
   mainContainer.style.display = "block";
@@ -52,89 +68,112 @@ function showMainUI() {
   loadGames();
 }
 
-// Upload game
+// ==========================
+// UPLOAD GAME
+// ==========================
 function uploadGame() {
   const name = document.getElementById("game-name").value;
   const link = document.getElementById("game-link").value;
-  const exeName = document.getElementById("game-exe")?.value || "";
+  const exeName = document.getElementById("game-exe").value;
 
-  if (!name || !link || !exeName) return alert("Fill in all fields");
+  if (!name || !link || !exeName) {
+    alert("Fill in all fields");
+    return;
+  }
 
   db.ref("games").push({
-      name: name,
-      link: link,
-      exe: exeName,
-      author: currentUser.uid
+    name: name,
+    link: link,
+    exe: exeName,
+    author: currentUser.uid
   }).then(() => {
-      loadGames();
-      document.getElementById("game-name").value = "";
-      document.getElementById("game-link").value = "";
-      document.getElementById("game-exe").value = "";
+    loadGames();
+    document.getElementById("game-name").value = "";
+    document.getElementById("game-link").value = "";
+    document.getElementById("game-exe").value = "";
   });
 }
 
-// Load user's games
+// ==========================
+// LOAD GAMES
+// ==========================
 function loadGames() {
-  db.ref("games").orderByChild("author").equalTo(currentUser.uid).once("value")
+  db.ref("games")
+    .orderByChild("author")
+    .equalTo(currentUser.uid)
+    .once("value")
     .then(snapshot => {
-        gameList.innerHTML = "";
-        snapshot.forEach(child => {
-            const game = child.val();
+      gameList.innerHTML = "";
 
-            const li = document.createElement("li");
+      snapshot.forEach(child => {
+        const game = child.val();
+        const li = document.createElement("li");
 
-            // Editable fields
-            const nameInput = document.createElement("input");
-            nameInput.value = game.name;
+        // Inputs
+        const nameInput = document.createElement("input");
+        nameInput.value = game.name;
 
-            const linkInput = document.createElement("input");
-            linkInput.value = game.link;
+        const linkInput = document.createElement("input");
+        linkInput.value = game.link;
 
-            const exeInput = document.createElement("input");
-            exeInput.value = game.exe || "";
-            exeInput.placeholder = "EXE Name";
+        const exeInput = document.createElement("input");
+        exeInput.value = game.exe;
+        exeInput.placeholder = "EXE Name";
 
-            // Buttons
-            const saveBtn = document.createElement("button");
-            saveBtn.textContent = "Save";
-            saveBtn.onclick = () => {
-                db.ref("games/" + child.key).update({
-                    name: nameInput.value,
-                    link: linkInput.value,
-                    exe: exeInput.value
-                }).then(loadGames);
-            };
+        // Save button
+        const saveBtn = document.createElement("button");
+        saveBtn.textContent = "Save";
+        saveBtn.onclick = () => {
+          db.ref("games/" + child.key).update({
+            name: nameInput.value,
+            link: linkInput.value,
+            exe: exeInput.value
+          }).then(loadGames);
+        };
 
-            const delBtn = document.createElement("button");
-            delBtn.textContent = "Delete";
-            delBtn.onclick = () => {
-                db.ref("games/" + child.key).remove().then(loadGames);
-            };
+        // Download button
+        const downloadBtn = document.createElement("button");
+        downloadBtn.textContent = "Download";
+        downloadBtn.onclick = () => {
+          window.open(game.link, "_blank");
+        };
 
-            li.appendChild(nameInput);
-            li.appendChild(linkInput);
-            li.appendChild(exeInput);
-            li.appendChild(saveBtn);
-            li.appendChild(delBtn);
+        // Delete button
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.onclick = () => {
+          db.ref("games/" + child.key).remove().then(loadGames);
+        };
 
-            gameList.appendChild(li);
-        });
+        li.appendChild(nameInput);
+        li.appendChild(linkInput);
+        li.appendChild(exeInput);
+        li.appendChild(saveBtn);
+        li.appendChild(downloadBtn);
+        li.appendChild(delBtn);
+
+        gameList.appendChild(li);
+      });
     });
 }
 
-// Logout
+// ==========================
+// LOGOUT
+// ==========================
 function logout() {
   auth.signOut().then(() => {
-      currentUser = null;
-      mainContainer.style.display = "none";
-      authContainer.style.display = "block";
+    currentUser = null;
+    mainContainer.style.display = "none";
+    authContainer.style.display = "block";
   });
 }
 
-// Auto check if user is logged in
+// ==========================
+// AUTO LOGIN CHECK
+// ==========================
 auth.onAuthStateChanged(user => {
-    if (user) {
-        currentUser = user;
-        showMainUI();
-    }
+  if (user) {
+    currentUser = user;
+    showMainUI();
+  }
 });
