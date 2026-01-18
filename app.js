@@ -23,7 +23,7 @@ let currentUser = null;
 // ==========================
 function downloadLauncher() {
   window.open(
-    "https://drive.google.com/drive/folders/1smSItox6kqFD6Gj5jmnjLvyLI__eAy_a?usp=sharing",
+    "https://drive.google.com/file/d/1elnjQhGcZo09jw4U39Kh8Cr0b4Q1zTnT/view",
     "_blank"
   );
 }
@@ -177,4 +177,5 @@ auth.onAuthStateChanged(user => {
     showMainUI();
   }
 });
+
 
